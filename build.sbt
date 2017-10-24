@@ -16,22 +16,20 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "1.4.0" % "provided"
 
 // Akka
 
-libraryDependencies <+= scalaVersion {
+libraryDependencies += scalaVersion {
   case x if x.startsWith("2.11") && System.getProperty("java.version") > "1.8" => "com.typesafe.akka" %% "akka-actor" % "2.4.12"
   case _ => "com.typesafe.akka" %% "akka-actor" % "2.3.15"
-}
+}.value
 
-libraryDependencies <+= scalaVersion {
+libraryDependencies += scalaVersion {
   case x if x.startsWith("2.11") && System.getProperty("java.version") > "1.8" => "com.typesafe.akka" %% "akka-remote" % "2.4.12"
   case _ => "com.typesafe.akka" %% "akka-remote" % "2.3.15"
-}
+}.value
 
-libraryDependencies <+= scalaVersion {
+libraryDependencies += scalaVersion {
   case x if x.startsWith("2.11") && System.getProperty("java.version") > "1.8" => "com.typesafe.akka" %% "akka-testkit" % "2.4.12"
   case _ => "com.typesafe.akka" %% "akka-testkit" % "2.3.15"
-}
-
-libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % akkaVersion.value
+}.value
 
 // Retry
 
@@ -57,7 +55,10 @@ libraryDependencies += "me.lessis" %% "retry" % "0.2.0"
 
 // Unit tests
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+libraryDependencies += scalaVersion {
+  case x if x.startsWith("2.10") => "org.scalatest" % "scalatest_2.10" % "2.2.4" % "test"
+  case x if x.startsWith("2.11") => "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
+}.value
 
 // Performance benchmarking
 
@@ -69,7 +70,21 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
 
 // Logging
 
-libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+libraryDependencies <+= scalaVersion {
+  case "2.10.6" =>  "com.typesafe.scala-logging" % "scala-logging-slf4j_2.10" % "2.1.2"
+  case _ => "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+}
+
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.1"
+
+libraryDependencies += (scalaVersion {
+  case "2.10.6" =>  "com.typesafe.scala-logging" % "scala-logging-slf4j_2.10" % "2.1.2"
+  case _ => "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
+}).value
+
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.1"
+
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.0.3"
 
 // Resolvers
 
@@ -96,9 +111,9 @@ scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value
 scalacOptions in (Compile, doc) ++= Seq("-doc-title", "Glint")
 scalacOptions in (Compile, doc) ++= Seq("-skip-packages", "akka")
 
-ghpages.settings
+enablePlugins(GhpagesPlugin)
 
 git.remoteRepo := "git@github.com:rjagerman/glint.git"
 
-site.includeScaladoc()
+enablePlugins(SiteScaladocPlugin)
 
