@@ -70,17 +70,10 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
 
 // Logging
 
-libraryDependencies <+= scalaVersion {
+libraryDependencies += scalaVersion {
   case "2.10.6" =>  "com.typesafe.scala-logging" % "scala-logging-slf4j_2.10" % "2.1.2"
   case _ => "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
-}
-
-libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.1"
-
-libraryDependencies += (scalaVersion {
-  case "2.10.6" =>  "com.typesafe.scala-logging" % "scala-logging-slf4j_2.10" % "2.1.2"
-  case _ => "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2"
-}).value
+}.value
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.1"
 
